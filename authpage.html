@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>WiFlight Captive Portal</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        /* Custom styles */
+        .plane-icon {
+            font-size: 60px;
+            color: #4CAF50;
+        }
+    </style>
+</head>
+<body class="bg-blue-500">
+
+<div class="max-w-sm mx-auto bg-white shadow-lg rounded-lg p-8 my-12">
+    <!-- Plane Icon -->
+    <div class="flex justify-center">
+        <span class="plane-icon">&#9992;</span>
+    </div>
+
+    <!-- GIF -->
+    <div class="gif-container text-center mb-4">
+        <img src="https://media0.giphy.com/media/WTu5YH9J0kyVtymRIe/giphy.gif" alt="WiFlight Animation" class="inline-block rounded-lg shadow-md">
+    </div>
+
+    <h1 class="text-3xl text-center text-gray-800 mb-6 font-bold">Welcome to WiFlight</h1>
+    <p class="text-center text-gray-600 mb-6">Please enter your credentials to continue:</p>
+
+    <!-- Display Authentication Error (if any) -->
+    <?php if (isset($_GET['error'])): ?>
+        <div class="text-red-500 text-center font-semibold mb-4">
+            <?php echo htmlspecialchars($_GET['error']); ?>
+        </div>
+    <?php endif; ?>
+
+    <!-- Login Form -->
+    <form method="post" action="$PORTAL_ACTION$" class="space-y-4">
+        <!-- Username Input -->
+        <div>
+            <label for="auth_user" class="block text-gray-700">Username</label>
+            <input type="text" name="auth_user" id="auth_user" required 
+                class="w-full px-4 py-2 mt-2 border rounded-md focus:ring-2 focus:ring-indigo-500" 
+                placeholder="Enter Username" aria-label="Username">
+        </div>
+
+        <!-- Password Input -->
+        <div>
+            <label for="auth_pass" class="block text-gray-700">Password</label>
+            <input type="password" name="auth_pass" id="auth_pass" required 
+                class="w-full px-4 py-2 mt-2 border rounded-md focus:ring-2 focus:ring-indigo-500" 
+                placeholder="Enter Password" aria-label="Password">
+        </div>
+
+        <!-- Hidden Fields for Redirect URL and Zone -->
+        <input type="hidden" name="redirurl" value="$PORTAL_REDIRURL$">
+        <input type="hidden" name="zone" value="$PORTAL_ZONE$">
+
+        <!-- Submit Button -->
+        <div class="flex justify-center">
+            <input type="submit" name="accept" value="Continue" 
+                class="bg-blue-500 text-white px-6 py-3 rounded-lg hover:bg-lime-400 cursor-pointer transition">
+        </div>
+    </form>
+
+    <!-- Footer -->
+    <div class="text-center text-gray-600 mt-6">
+        <p>If you have issues with login, contact support.</p>
+    </div>
+</div>
+
+</body>
+</html>
