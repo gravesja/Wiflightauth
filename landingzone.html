@@ -3,31 +3,104 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Welcome to WiFlight!</title>
+    <link rel="icon" type="image/x-icon" href="favicon.ico">
+    <title>Wi-Flight</title>
     <script src="https://cdn.tailwindcss.com"></script>
 </head>
-<body class="bg-gray-100">
-    <div class="max-w-2xl mx-auto bg-white shadow-lg rounded-lg p-8 my-12">
-        <h1 class="text-3xl text-center text-gray-800 font-bold">WiFlight Mobile Router Project</h1>
-        <p class="text-center text-gray-600 mt-4">
-            **Wi-Flight** is a compact and innovative mobile networking solution designed to provide businesses with 
-            **secure, reliable, and easily deployable** connectivity anywhere. Our system integrates **advanced networking 
-            hardware** with **intelligent software management tools**, ensuring seamless configuration, real-time monitoring, 
+<body class="bg-blue-500">
+    <div class="max-w-7xl mx-auto bg-white shadow-lg rounded-lg p-8 my-12 sm:px-6 lg:px-8">
+        <h1 class="text-3xl text-center text-black-800 font-bold">Welcome to Wi-Flight!</h1>
+        <p class="text-center text-black-600 mt-4">
+            Wi-Flight is a compact and innovative mobile networking solution designed to provide businesses with 
+            secure, reliable, and easily deployable connectivity anywhere. Our model integrates advanced networking 
+            hardware with software management tools, ensuring seamless configuration, real-time monitoring, 
             and robust security enforcement.
         </p>
 
-        <h2 class="text-2xl text-gray-800 font-semibold mt-6">Key Features</h2>
-        <ul class="list-disc list-inside mt-3 text-gray-700">
+        <h2 class="text-2xl text-black-800 font-semibold mt-6">Key Features</h2>
+        <ul class="list-disc list-inside mt-3 text-black-700">
             <li><strong>Portable & Rapid Deployment</strong> – Easily deployable in remote or temporary locations.</li>
             <li><strong>Secure Connectivity</strong> – Strong encryption, authentication, and network access controls.</li>
-            <li><strong>Scalable Infrastructure</strong> – Supports multiple devices with optimized bandwidth management.</li>
-            <li><strong>Centralized Monitoring</strong> – Real-time network analytics and performance tracking.</li>
-            <li><strong>User-Friendly Management</strong> – Intuitive dashboard for configuration and troubleshooting.</li>
+            <li><strong>Scalable Infrastructure</strong> – Supports multiple network devices with optimized bandwidth management.</li>
+            <li><strong>Centralized Monitoring</strong> – Intuitive dashboard for configuration and troubleshooting for real-time network analytics.</li>
         </ul>
+<!-- Network Topology Section -->
+<div class="mt-6">
+    <h3 class="text-xl text-black-800 font-semibold">Network Topology</h3>
+    <p class="text-black-600 mt-2">
+        Below is the network topology of the Wi-Flight project, showcasing how all devices are interconnected to provide secure, reliable, and efficient connectivity.
+    </p>
+    <img src="images/wiflightnetwork.png" alt="Network Topology"  style="width: 470px; height: 400px;">
+</div>
 
-        <p class="text-gray-600 mt-4">
-            Wi-Flight empowers businesses to stay connected **anytime, anywhere**, providing a **flexible, secure, and efficient** 
-            solution for modern networking needs.
+        <h2 class="text-2xl text-black-800 font-semibold mt-6">Network Devices Overview</h2>
+
+        <!-- NETGEAR Nighthawk M1 -->
+        <div class="mt-6">
+            <h3 class="text-xl text-black-800 font-semibold">NETGEAR Nighthawk M1 4G LTE WiFi Mobile Hotspot</h3>
+            <p class="text-gray-black mt-2">
+                The NETGEAR Nighthawk M1 acts as the ISP connection, providing 4G LTE internet access through an active SD card. It serves as the primary connection point for the network and is easily portable for on-the-go connectivity.
+            </p>
+            <img src="images/netgear.png" alt="NETGEAR Nighthawk M1"  style="width: 200px; height: 200px;">
+        </div>
+
+        <!-- GL.iNet GL-SFT1200 -->
+        <div class="mt-6">
+            <h3 class="text-xl text-black-800 font-semibold">GL.iNet GL-SFT1200 Secure Travel WiFi Router</h3>
+            <p class="text-black-600 mt-2">
+                This device is set in Access Point mode, providing WiFi coverage for internal devices. Routing and security configurations are handled by the pfsense firewall appliance. 
+            </p>
+            <img src="images/gl.inet.png" alt="GL.iNet GL-SFT1200" style="width: 200px; height: 200px;">
+        </div>
+
+        <!-- Dreamfyre Mini PC running pfSense -->
+        <div class="mt-6">
+            <h3 class="text-xl text-black-800 font-semibold">Mini PC hosting pfSense</h3>
+            <p class="text-gray-600 mt-2">
+                The pfSense firewall running on a mini PC serves as the core security and routing device in the network. 
+            </p>Features:<p>
+                <ul class="list-disc list-inside text-black-600">
+                    <li>Captive Portal</li>
+                    <li>IDS/IPS</li>
+                    <li>Web filtering</li>
+                    <li>Nmap</li>
+                </ul>
+            <img src="images/pfsense.png" alt="Dreamfyre Mini PC pfSense" style="width: 200px; height: 200px;">
+        </div>
+
+        <!-- Raspberry Pi -->
+        <div class="mt-6">
+            <h3 class="text-xl text-black-800 font-semibold">Raspberry Pi</h3>
+            <p class="text-black-600 mt-2">
+                The Raspberry Pi is configured with Pi-hole, providing DNS ad-blocking and network-wide content filtering. It helps improve security and performance by blocking unwanted ads and harmful domains.
+            </p>
+            <p class="text-black-600 mt-2">
+                The NAS serves as a centralized file storage solution, allowing network-wide access to files.
+            </p>
+            <img src="images/raspberry.png" alt="Raspberry Pi with Pi-hole" style="width: 200px; height: 200px;">
+        </div>
+
+        <!-- Grafana Dashboard -->
+        <div class="mt-6">
+            <h3 class="text-xl text-black-800 font-semibold">Grafana Dashboard hosted on Docker</h3>
+            <p class="text-gray-600 mt-2">
+            Telegraf (running on pfsense) sends data to InfluxDB thats hosted on Docker. Grafana pulls the stored data and displays in a live dashboard. 
+            </p>
+            <img src="images/grafana.png" alt="Raspberry Pi with Pi-hole" style="width: 600px; height: 150px;">
+        </div>
+
+        <!-- Cisco 2960X Switch -->
+        <div class="mt-6">
+            <h3 class="text-xl text-black-800 font-semibold">Cisco 2960X Switch</h3>
+            <p class="text-black-600 mt-2">
+                The Cisco 2960X Switch is used to connect wired devices, providing PoE and VLAN support to segment traffic. However, this switch can be easily swapped based on specific needs.
+            </p>
+            <img src="images/ciscoswitch.png" alt="Cisco 2960X Switch" style="width: 400px; height: 150px;">
+        </div>
+
+        <h2 class="text-2xl text-black-800 font-semibold mt-6">Conclusion</h2>
+        <p class="text-black-600 mt-4">
+            Wi-Flight provides a portable and secure solution to modern networking needs, allowing businesses to maintain connectivity even in remote or temporary locations. With robust security, centralized management, and ease of deployment, Wi-Flight empowers businesses to stay connected and efficient, wherever they go.
         </p>
 
         <div class="text-center mt-6">
