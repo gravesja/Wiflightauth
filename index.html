@@ -1,14 +1,12 @@
 <!DOCTYPE html>
 <html lang="en">
-    <link rel="icon" type="image/x-icon" href="favicon.ico">
 <head>
+    <link rel="icon" type="image/x-icon" href="favicon.ico">
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>WiFlight Captive Portal</title>
-    <!-- Tailwind CSS CDN -->
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
-        /* Custom styles */
         .plane-icon {
             font-size: 60px;
             color: #4CAF50;
@@ -16,64 +14,69 @@
     </style>
 </head>
 <body class="bg-blue-500">
-
 <div class="max-w-sm mx-auto bg-white shadow-lg rounded-lg p-8 my-12">
-    <!-- Plane Icon -->
-    <div class="gif-container text-center mb-4">
+    <div class="text-center mb-4">
         <img src="planeemoji.png" alt="WiFlight Animation" class="inline-block rounded-lg shadow-md" style="width: 140px; height: 140px;">
     </div>
-
-    <!-- GIF -->
-    <div class="gif-container text-center mb-4">
+    <div class="text-center mb-4">
         <img src="https://media0.giphy.com/media/WTu5YH9J0kyVtymRIe/giphy.gif" alt="WiFlight Animation" class="inline-block rounded-lg shadow-md">
     </div>
 
     <h1 class="text-3xl text-center text-gray-800 mb-6 font-bold">Welcome to WiFlight</h1>
-    
+
     <div class="text-center text-gray-600 mt-6">
+        <p><strong>Login with:</strong> <code>admin</code> / <code>admin</code></p>
         <p><strong>Disclaimer:</strong> This captive portal is part of a portfolio showcase. It is not a fully functional system and is for demonstration purposes only.</p>
     </div>
-    <!-- Display Authentication Error (if any) -->
-    <?php if (isset($_GET['error'])): ?>
-        <div class="text-red-500 text-center font-semibold mb-4">
-            <?php echo htmlspecialchars($_GET['error']); ?>
-        </div>
-    <?php endif; ?>
+
+    <!-- Error Message Display -->
+    <div id="error-message" class="text-red-500 text-center font-semibold mb-4 hidden"></div>
 
     <!-- Login Form -->
-    <form method="post" action="$PORTAL_ACTION$" class="space-y-4">
-        <!-- Username Input -->
+    <form id="loginForm" class="space-y-4">
         <div>
             <label for="auth_user" class="block text-gray-700">Username</label>
             <input type="text" name="auth_user" id="auth_user" required 
                 class="w-full px-4 py-2 mt-2 border rounded-md focus:ring-2 focus:ring-indigo-500" 
-                placeholder="Enter Username" aria-label="Username">
+                placeholder="Enter Username">
         </div>
-
-        <!-- Password Input -->
         <div>
             <label for="auth_pass" class="block text-gray-700">Password</label>
             <input type="password" name="auth_pass" id="auth_pass" required 
                 class="w-full px-4 py-2 mt-2 border rounded-md focus:ring-2 focus:ring-indigo-500" 
-                placeholder="Enter Password" aria-label="Password">
+                placeholder="Enter Password">
         </div>
-
-        <!-- Hidden Fields for Redirect URL and Zone -->
-        <input type="hidden" name="redirurl" value="$PORTAL_REDIRURL$">
-        <input type="hidden" name="zone" value="$PORTAL_ZONE$">
-
-        <!-- Submit Button -->
         <div class="flex justify-center">
-            <input type="submit" name="accept" value="Continue" 
-                class="bg-blue-500 text-white px-6 py-3 rounded-lg hover:bg-lime-400 cursor-pointer transition">
+            <button type="submit" class="bg-blue-500 text-white px-6 py-3 rounded-lg hover:bg-lime-400 cursor-pointer transition">
+                Continue
+            </button>
         </div>
     </form>
-
-    <!-- Footer -->
-    <div class="text-center text-gray-600 mt-6">
-        <p>If you have issues with login, contact support.</p>
-    </div>
 </div>
+
+<script>
+document.getElementById("loginForm").addEventListener("submit", async function(event) {
+    event.preventDefault(); // Prevent default form submission
+
+    const username = document.getElementById("auth_user").value;
+    const password = document.getElementById("auth_pass").value;
+
+    const response = await fetch("/api/authenticate", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ auth_user: username, auth_pass: password }),
+    });
+
+    const data = await response.json();
+
+    if (data.success) {
+        window.location.href = data.redirect; // Redirect to homepage
+    } else {
+        document.getElementById("error-message").textContent = data.message;
+        document.getElementById("error-message").classList.remove("hidden");
+    }
+});
+</script>
 
 </body>
 </html>
