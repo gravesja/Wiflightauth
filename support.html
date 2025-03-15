@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Support Chat</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+
+    <!-- BotPress Chat -->
+    <script src="https://cdn.botpress.cloud/webchat/v2.3/inject.js"></script>
+    <style>
+        #webchat .bpWebchat {
+            position: unset;
+            width: 100%;
+            height: 100%;
+            max-height: 100%;
+            max-width: 100%;
+        }
+        #webchat .bpFab {
+            display: none;
+        }
+    </style>
+</head>
+<body class="bg-gray-100 flex flex-col items-center justify-center min-h-screen p-4">
+
+    <div class="max-w-2xl w-full bg-white rounded-lg shadow-lg p-6">
+        <h1 class="text-3xl font-bold text-center text-gray-800 mb-4">Wi-Flight Support Chat</h1>
+        <p class="text-gray-600 text-center mb-6">Need help? Our AI assistant is here to guide you with troubleshooting.</p>
+
+        <div id="webchat" style="width: 500px; height: 500px;"></div>
+    </div>
+
+    <script>
+        window.botpress.on("webchat:ready", () => {
+            window.botpress.open();
+        });
+
+        window.botpress.init({
+            "botId": "2f517fd3-4e58-4752-8f6d-b5b71489a94c",
+            "configuration": {
+                "color": "#3B82F6",
+                "variant": "solid",
+                "themeMode": "light",
+                "fontFamily": "inter",
+                "radius": 1
+            },
+            "clientId": "eac87c09-8bf2-4d9e-b61d-4ab3124e0fca",
+            "selector": "#webchat"
+        });
+    </script>
+
+</body>
+</html>
