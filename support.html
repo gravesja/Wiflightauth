@@ -1,62 +1,70 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Support Chat</title>
-
-  <!-- Botpress Webchat Embeds -->
+  <title>Webchat Integration</title>
   <script src="https://cdn.botpress.cloud/webchat/v2.3/inject.js"></script>
   <script src="https://files.bpcontent.cloud/2025/03/14/05/20250314053424-9R7WMEQ9.js"></script>
 
-  
   <script src="https://cdn.tailwindcss.com"></script>
 </head>
-<body class="bg-gray-100 flex justify-center items-center h-screen">
 
-  <!-- Main Content Section -->
-  <div class="max-w-lg bg-white p-8 rounded-lg shadow-xl w-full">
-    <h1 class="text-3xl font-semibold text-center text-gray-800 mb-4">Welcome to Our Support Center</h1>
-    <p class="text-center text-gray-600 mb-6">Need assistance? Click the button below to chat with our support bot.</p>
-
-    <!-- Chat Button -->
-    <div class="flex justify-center">
-      <button id="myButton" class="bg-blue-500 text-white px-6 py-3 rounded-lg hover:bg-blue-400 transition">
-        Start Chat
+<body>
+  <div class="flex justify-center items-center min-h-screen bg-gray-100">
+    <div class="text-center">
+      <button id="myButton" class="px-6 py-3 text-white bg-blue-600 rounded-lg hover:bg-blue-700 focus:outline-none">
+        Click Me!
       </button>
-    </div>
-
-    <!-- Iframe Integration for Webchat -->
-    <div class="mt-6">
-      <iframe id="webchat-iframe" src="" width="100%" height="500" class="border-0 rounded-lg shadow-lg hidden"></iframe>
     </div>
   </div>
 
   <script>
-    
-    function handleClick() {
-      console.log('Button clicked!');
-      document.getElementById("webchat-iframe").src = "https://cdn.botpress.cloud/webchat/v2.2/shareable.html?configUrl=https://files.bpcontent.cloud/2025/03/14/05/20250314053424-43LIZ3O9.json";
-      document.getElementById("webchat-iframe").classList.remove("hidden");
-      window.botpressWebChat.sendPayload({
-        type: 'trigger',
-        payload: {
-          myCustomProperty: 'hello',
-        },
+    window.botpress.on("webchat:ready", () => {
+      window.botpress.open();
+
+      const button = document.getElementById('myButton');
+      button.addEventListener('click', () => {
+        console.log('Button clicked!');
+        window.botpressWebChat.sendPayload({
+          type: 'trigger',
+          payload: {
+            myCustomProperty: 'hello',
+          },
+        });
       });
-    }
 
-    // Event listener for the chat button
-    const button = document.getElementById('myButton');
-    button.addEventListener('click', handleClick);
+      window.botpressWebChat.onEvent(function (event) {
+        if (event.type === 'USER_MESSAGE') {
+          const userMessage = event.payload.text;
 
-    // Show the chat after it's loaded
-    window.botpressWebChat.onEvent(function (event) {
-      if (event.type === 'LIFECYCLE.LOADED') {
-        window.botpressWebChat.sendEvent({ type: 'show' });
-      }
-    }, ['LIFECYCLE.LOADED']);
+          fetch('/api/chat', {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+              messages: [{ role: 'user', content: userMessage }]
+            })
+          })
+            .then(response => response.json())
+            .then(data => {
+              const botMessage = data.choices[0].message.content; 
+              window.botpressWebChat.sendEvent({
+                type: 'BOT_MESSAGE',
+                payload: {
+                  text: botMessage
+                }
+              });
+            })
+            .catch(error => {
+              console.error('Error:', error);
+            });
+        }
+      }, ['USER_MESSAGE']);
+    });
   </script>
 
 </body>
+
 </html>
