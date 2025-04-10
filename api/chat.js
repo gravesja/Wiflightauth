@@ -36,5 +36,9 @@ export default async function handler(req, res) {
     } catch (error) {
         console.error("OpenAI API error:", error);
         res.status(500).json({ error: "Internal server error" });
+        hideLoading();
+        console.error('Error details:', error); // This will print the error details in the console
+        appendMessage("Bot", "Error connecting to the server. Please try again.");
     }
+     
 }
