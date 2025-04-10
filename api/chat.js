@@ -5,7 +5,7 @@ export default async function handler(req, res) {
         return res.status(405).json({ error: "Method Not Allowed" });
     }
 
-    const apiKey = process.env.OPENAI_API_KEY;
+    const apiKey = OPENAI_API_KEY;
     if (!apiKey) {
         return res.status(500).json({ error: "Missing OpenAI API Key" });
     }
