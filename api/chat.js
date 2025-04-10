@@ -1,26 +1,30 @@
 import fetch from 'node-fetch';
 
-const TIMEOUT = 300000; //5 minutes in milliseconds
+const TIMEOUT = 60000; // 1 minute in milliseconds
 
 export default async function handler(req, res) {
+    
     if (req.method !== "POST") {
         return res.status(405).json({ error: "Method Not Allowed" });
     }
-
     const apiKey = process.env.OPENAI_API_KEY;
     if (!apiKey) {
+        console.error("OpenAI API Key is missing or not loading correctly");
         return res.status(500).json({ error: "Missing OpenAI API Key" });
     }
 
+    // Validate request body
     const { messages } = req.body;
     if (!messages || !Array.isArray(messages)) {
         return res.status(400).json({ error: "Invalid messages format" });
     }
 
     try {
+        // Set up timeout controller
         const controller = new AbortController();
         const timeoutId = setTimeout(() => controller.abort(), TIMEOUT);
 
+        // Make request to OpenAI API
         const response = await fetch("https://api.openai.com/v1/chat/completions", {
             method: "POST",
             headers: {
@@ -28,14 +32,14 @@ export default async function handler(req, res) {
                 "Authorization": `Bearer ${apiKey}`
             },
             body: JSON.stringify({
-                model: "gpt-4o-mini", 
-                messages: messages,   
+                model: "gpt-4o-mini",
+                messages: messages,
                 temperature: 0.7
             }),
-            signal: controller.signal, // Attach the timeout controller here
+            signal: controller.signal,
         });
 
-        clearTimeout(timeoutId); // Clear the timeout once the request completes
+        clearTimeout(timeoutId); 
 
         const data = await response.json();
         if (response.ok) {
@@ -46,6 +50,5 @@ export default async function handler(req, res) {
     } catch (error) {
         console.error("OpenAI API error:", error);
         res.status(500).json({ error: "Internal server error" });
-        console.error('Error details:', error); 
     }
 }
