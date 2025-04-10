@@ -1,3 +1,7 @@
+import fetch from 'node-fetch';
+
+const TIMEOUT = 300000; //5 minutes in milliseconds
+
 export default async function handler(req, res) {
     if (req.method !== "POST") {
         return res.status(405).json({ error: "Method Not Allowed" });
@@ -14,6 +18,9 @@ export default async function handler(req, res) {
     }
 
     try {
+        const controller = new AbortController();
+        const timeoutId = setTimeout(() => controller.abort(), TIMEOUT);
+
         const response = await fetch("https://api.openai.com/v1/chat/completions", {
             method: "POST",
             headers: {
@@ -24,8 +31,11 @@ export default async function handler(req, res) {
                 model: "gpt-4o-mini", 
                 messages: messages,   
                 temperature: 0.7
-            })
+            }),
+            signal: controller.signal, // Attach the timeout controller here
         });
+
+        clearTimeout(timeoutId); // Clear the timeout once the request completes
 
         const data = await response.json();
         if (response.ok) {
@@ -36,9 +46,6 @@ export default async function handler(req, res) {
     } catch (error) {
         console.error("OpenAI API error:", error);
         res.status(500).json({ error: "Internal server error" });
-        hideLoading();
-        console.error('Error details:', error); // This will print the error details in the console
-        appendMessage("Bot", "Error connecting to the server. Please try again.");
+        console.error('Error details:', error); 
     }
-     
 }
